@@ -1,0 +1,9 @@
+# Just some commands I keep forgetting
+
+udisksctl mount -b /dev/sdb1
+
+git remote set-url origin git@github.com:martinshields/pisys.git
+
+docker logs -f delugevpn #realtime logs 
+
+docker logs --tail 50 delugevpn
