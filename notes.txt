@@ -10,17 +10,3 @@ watchtower
 
 
 
-yes do that but i also need docke-compse with 
-
-gluetun # use vpn private interner acesses 
-deluge
-jellyfin
-Portainer
-Sonarr
-Radarr
-watchtower
-
-with health checks that use CMD . and i need gluetun to connect to vpn brfor starting deluge
-
-
-yes do that but give me two files setup_storage.sh and docker-compose.yml 
