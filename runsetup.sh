@@ -48,19 +48,49 @@ sudo apt install -y \
     wget \
     curl \
     speedtest-cli \
-    neovim \
     bat \
     vifm \
     zsh \
     git \
     docker.io \
-    docker-compose
+    docker-compose \
+    ninja-build \
+    gettext \
+    cmake \
+    unzip \
+    build-essential
 
 print_step "Adding $USER to docker group..."
 sudo usermod -aG docker "$USER"
 
 # =============================================================================
-# STEP 2: Install lazydocker from GitHub
+# STEP 2: Install neovim from source
+# =============================================================================
+print_step "Installing neovim v0.11.2 or greater..."
+NVIM_VERSION="v0.11.2"
+cd "$HOME"
+
+if [ -d "neovim" ]; then
+    print_warning "neovim directory already exists, removing..."
+    rm -rf neovim
+fi
+
+print_step "Cloning neovim repository..."
+git clone https://github.com/neovim/neovim.git --branch stable --depth 1
+cd neovim
+
+print_step "Building neovim (this may take several minutes)..."
+make CMAKE_BUILD_TYPE=Release
+sudo make install
+
+cd "$HOME"
+rm -rf neovim
+
+INSTALLED_VERSION=$(nvim --version | head -n1)
+print_step "Neovim installed successfully: $INSTALLED_VERSION"
+
+# =============================================================================
+# STEP 3: Install lazydocker from GitHub
 # =============================================================================
 print_step "Installing lazydocker..."
 LAZYDOCKER_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazydocker/releases/latest" | grep -Po '"tag_name": "v\K[0-9.]+')
@@ -71,7 +101,7 @@ rm lazydocker lazydocker.tar.gz
 print_step "lazydocker v${LAZYDOCKER_VERSION} installed successfully"
 
 # =============================================================================
-# STEP 3: Install Oh-My-Zsh and configure
+# STEP 4: Install Oh-My-Zsh and configure
 # =============================================================================
 print_step "Installing Oh-My-Zsh..."
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
@@ -103,7 +133,7 @@ print_step "Setting zsh as default shell..."
 sudo chsh -s "$(which zsh)" "$USER"
 
 # =============================================================================
-# STEP 4: Download and install nvim config
+# STEP 5: Download and install nvim config
 # =============================================================================
 print_step "Installing nvim configuration..."
 cd "$HOME"
@@ -129,7 +159,7 @@ else
 fi
 
 # =============================================================================
-# STEP 5: Copy alias_pi.zsh and docker-compose.yaml
+# STEP 6: Copy alias_pi.zsh and docker-compose.yaml
 # =============================================================================
 print_step "Copying alias_pi.zsh to Oh-My-Zsh custom folder..."
 if [ -f "$SCRIPT_DIR/configs/alias_pi.zsh" ]; then
@@ -154,7 +184,7 @@ else
 fi
 
 # =============================================================================
-# STEP 6: Run pi-foldersetup.sh
+# STEP 7: Run pi-foldersetup.sh
 # =============================================================================
 print_step "Running pi-foldersetup.sh..."
 if [ -f "$SCRIPT_DIR/configs/pi-foldersetup.sh" ]; then
