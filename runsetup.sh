@@ -39,7 +39,6 @@ print_step "Installing required packages..."
 sudo apt install -y \
     htop \
     lazygit \
-    lazydocker \
     fastfetch \
     fzf \
     p7zip-full \
@@ -58,7 +57,18 @@ print_step "Adding $USER to docker group..."
 sudo usermod -aG docker "$USER"
 
 # =============================================================================
-# STEP 2: Install Oh-My-Zsh and configure
+# STEP 2: Install lazydocker from GitHub
+# =============================================================================
+print_step "Installing lazydocker..."
+LAZYDOCKER_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazydocker/releases/latest" | grep -Po '"tag_name": "v\K[0-9.]+')
+curl -Lo lazydocker.tar.gz "https://github.com/jesseduffield/lazydocker/releases/latest/download/lazydocker_${LAZYDOCKER_VERSION}_Linux_x86_64.tar.gz"
+tar xf lazydocker.tar.gz lazydocker
+sudo install lazydocker /usr/local/bin
+rm lazydocker lazydocker.tar.gz
+print_step "lazydocker v${LAZYDOCKER_VERSION} installed successfully"
+
+# =============================================================================
+# STEP 3: Install Oh-My-Zsh and configure
 # =============================================================================
 print_step "Installing Oh-My-Zsh..."
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
@@ -90,7 +100,7 @@ print_step "Setting zsh as default shell..."
 sudo chsh -s "$(which zsh)" "$USER"
 
 # =============================================================================
-# STEP 3: Download and install nvim config
+# STEP 4: Download and install nvim config
 # =============================================================================
 print_step "Installing nvim configuration..."
 cd "$HOME"
@@ -116,7 +126,7 @@ else
 fi
 
 # =============================================================================
-# STEP 4: Copy alias_pi.zsh and docker-compose.yaml
+# STEP 5: Copy alias_pi.zsh and docker-compose.yaml
 # =============================================================================
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -143,7 +153,7 @@ else
 fi
 
 # =============================================================================
-# STEP 5: Run pi-foldersetup.sh
+# STEP 6: Run pi-foldersetup.sh
 # =============================================================================
 print_step "Running pi-foldersetup.sh..."
 if [ -f "$SCRIPT_DIR/scripts/pi-foldersetup.sh" ]; then
