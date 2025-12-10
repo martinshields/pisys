@@ -46,6 +46,8 @@ sudo apt install -y \
     htop \
     lazygit \
     fastfetch \
+    s-tui \
+    stress \
     fzf \
     p7zip-full \
     wget \
