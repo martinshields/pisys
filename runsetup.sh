@@ -131,11 +131,11 @@ fi
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 print_step "Copying alias_pi.zsh to Oh-My-Zsh custom folder..."
-if [ -f "$SCRIPT_DIR/alias_pi.zsh" ]; then
-    cp "$SCRIPT_DIR/alias_pi.zsh" ~/.oh-my-zsh/custom/alias_pi.zsh
+if [ -f "$SCRIPT_DIR/configs/alias_pi.zsh" ]; then
+    cp "$SCRIPT_DIR/configs/alias_pi.zsh" ~/.oh-my-zsh/custom/alias_pi.zsh
     print_step "alias_pi.zsh copied successfully"
 else
-    print_error "alias_pi.zsh not found in $SCRIPT_DIR"
+    print_error "alias_pi.zsh not found in $SCRIPT_DIR/configs"
     exit 1
 fi
 
@@ -144,11 +144,11 @@ COMPOSE_PATH="/opt/media-docker"
 sudo mkdir -p "$COMPOSE_PATH"
 sudo chown -R "$USER:$(id -gn)" "$COMPOSE_PATH"
 
-if [ -f "$SCRIPT_DIR/docker-compose.yaml" ]; then
-    cp "$SCRIPT_DIR/docker-compose.yaml" "$COMPOSE_PATH/docker-compose.yaml"
+if [ -f "$SCRIPT_DIR/configs/docker-compose.yaml" ]; then
+    cp "$SCRIPT_DIR/configs/docker-compose.yaml" "$COMPOSE_PATH/docker-compose.yaml"
     print_step "docker-compose.yaml copied to $COMPOSE_PATH"
 else
-    print_error "docker-compose.yaml not found in $SCRIPT_DIR"
+    print_error "docker-compose.yaml not found in $SCRIPT_DIR/configs"
     exit 1
 fi
 
@@ -156,10 +156,10 @@ fi
 # STEP 6: Run pi-foldersetup.sh
 # =============================================================================
 print_step "Running pi-foldersetup.sh..."
-if [ -f "$SCRIPT_DIR/scripts/pi-foldersetup.sh" ]; then
-    bash "$SCRIPT_DIR/scripts/pi-foldersetup.sh"
+if [ -f "$SCRIPT_DIR/configs/pi-foldersetup.sh" ]; then
+    bash "$SCRIPT_DIR/configs/pi-foldersetup.sh"
 else
-    print_error "pi-foldersetup.sh not found in $SCRIPT_DIR/scripts/"
+    print_error "pi-foldersetup.sh not found in $SCRIPT_DIR/configs/"
     exit 1
 fi
 
