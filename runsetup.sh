@@ -171,18 +171,11 @@ else
 fi
 
 print_step "Configuring vifm to use neovim..."
-mkdir -p ~/.config/vifm
-if ! grep -q "set vicmd=nvim" ~/.config/vifm/vifmrc 2>/dev/null; then
-    cat >> ~/.config/vifm/vifmrc << 'EOF'
-
-" Use neovim as the default editor
-if executable('vim')
-    set vicmd=nvim
-endif
-EOF
-    print_step "vifmrc configured to use neovim"
+if [ -f ~/.config/vifm/vifmrc ]; then
+    sed -i 's/set vicmd=vim/set vicmd=nvim/g' ~/.config/vifm/vifmrc
+    print_step "vifmrc updated to use neovim"
 else
-    print_warning "vifmrc already contains vicmd=nvim configuration, skipping..."
+    print_warning "vifmrc not found, skipping..."
 fi
 
 print_step "Copying docker-compose.yaml to /opt/media-docker..."
