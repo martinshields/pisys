@@ -38,6 +38,9 @@ print_step "Starting Raspberry Pi Setup..."
 print_step "Updating package lists..."
 sudo apt update
 
+print_step "Upgrading installed packages..."
+sudo apt upgrade -y
+
 print_step "Installing required packages..."
 sudo apt install -y \
     htop \

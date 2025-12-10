@@ -11,11 +11,52 @@ SYSTEMD_SERVICE="/etc/systemd/system/storage-repair.service"
 
 # Ensure mount exists
 if ! mountpoint -q "$MOUNT_POINT"; then
-    echo "❌ ERROR: $MOUNT_POINT is not mounted. Fix your fstab and mount the drive first."
-    exit 1
-fi
+    echo "⚠️  $MOUNT_POINT is not mounted."
+    echo ""
+    echo "Available block devices:"
+    lsblk -o NAME,SIZE,TYPE,MOUNTPOINT,FSTYPE,LABEL
+    echo ""
 
-echo "✅ Drive detected at $MOUNT_POINT"
+    read -p "Enter the device to mount to $MOUNT_POINT (e.g., sda1, nvme0n1p1) or 'skip' to exit: " DEVICE
+
+    if [ "$DEVICE" = "skip" ] || [ -z "$DEVICE" ]; then
+        echo "❌ Exiting. Mount your storage drive to $MOUNT_POINT and re-run this script."
+        exit 1
+    fi
+
+    echo "📂 Creating $MOUNT_POINT directory..."
+    sudo mkdir -p "$MOUNT_POINT"
+
+    echo "💾 Mounting /dev/$DEVICE to $MOUNT_POINT..."
+    if sudo mount /dev/$DEVICE "$MOUNT_POINT"; then
+        echo "✅ Successfully mounted /dev/$DEVICE to $MOUNT_POINT"
+
+        # Ask about fstab
+        read -p "Add this mount to /etc/fstab for automatic mounting on boot? (y/n): " ADD_FSTAB
+        if [ "$ADD_FSTAB" = "y" ]; then
+            FSTYPE=$(lsblk -no FSTYPE /dev/$DEVICE)
+            UUID=$(sudo blkid -s UUID -o value /dev/$DEVICE)
+
+            if [ -n "$UUID" ]; then
+                # Check if already in fstab
+                if grep -q "$UUID" /etc/fstab 2>/dev/null; then
+                    echo "⚠️  UUID $UUID already exists in /etc/fstab, skipping..."
+                else
+                    FSTAB_ENTRY="UUID=$UUID $MOUNT_POINT $FSTYPE defaults 0 2"
+                    echo "$FSTAB_ENTRY" | sudo tee -a /etc/fstab
+                    echo "✅ Added to /etc/fstab: $FSTAB_ENTRY"
+                fi
+            else
+                echo "❌ Could not determine UUID for /dev/$DEVICE"
+            fi
+        fi
+    else
+        echo "❌ Failed to mount /dev/$DEVICE"
+        exit 1
+    fi
+else
+    echo "✅ Drive detected at $MOUNT_POINT"
+fi
 
 # Create folder structure
 echo "📁 Creating directory structure..."
