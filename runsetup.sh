@@ -21,6 +21,9 @@ print_warning() {
     echo -e "${YELLOW}WARNING:${NC} $1"
 }
 
+# Get script directory (must be set early before any cd commands)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # Check if running as root
 if [[ $EUID -eq 0 ]]; then
    print_error "This script should not be run as root (don't use sudo)"
@@ -128,8 +131,6 @@ fi
 # =============================================================================
 # STEP 5: Copy alias_pi.zsh and docker-compose.yaml
 # =============================================================================
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
 print_step "Copying alias_pi.zsh to Oh-My-Zsh custom folder..."
 if [ -f "$SCRIPT_DIR/configs/alias_pi.zsh" ]; then
     cp "$SCRIPT_DIR/configs/alias_pi.zsh" ~/.oh-my-zsh/custom/alias_pi.zsh
