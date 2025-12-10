@@ -93,8 +93,29 @@ print_step "Neovim installed successfully: $INSTALLED_VERSION"
 # STEP 3: Install lazydocker from GitHub
 # =============================================================================
 print_step "Installing lazydocker..."
+
+# Detect architecture
+ARCH=$(uname -m)
+case "$ARCH" in
+    x86_64)
+        LAZYDOCKER_ARCH="x86_64"
+        ;;
+    aarch64|arm64)
+        LAZYDOCKER_ARCH="arm64"
+        ;;
+    armv7l)
+        LAZYDOCKER_ARCH="armv7"
+        ;;
+    *)
+        print_error "Unsupported architecture: $ARCH"
+        exit 1
+        ;;
+esac
+
+print_step "Detected architecture: $ARCH (using $LAZYDOCKER_ARCH binary)"
+
 LAZYDOCKER_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazydocker/releases/latest" | grep -Po '"tag_name": "v\K[0-9.]+')
-curl -Lo lazydocker.tar.gz "https://github.com/jesseduffield/lazydocker/releases/latest/download/lazydocker_${LAZYDOCKER_VERSION}_Linux_x86_64.tar.gz"
+curl -Lo lazydocker.tar.gz "https://github.com/jesseduffield/lazydocker/releases/latest/download/lazydocker_${LAZYDOCKER_VERSION}_Linux_${LAZYDOCKER_ARCH}.tar.gz"
 tar xf lazydocker.tar.gz lazydocker
 sudo install lazydocker /usr/local/bin
 rm lazydocker lazydocker.tar.gz
