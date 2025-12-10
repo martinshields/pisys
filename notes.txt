@@ -1,5 +1,5 @@
 
-note:::::
+note::::
 gluetun
 deluge
 jellyfin
@@ -9,4 +9,31 @@ Radarr
 watchtower
 
 
+1. i need a bash script to install these programs on the rpi 
 
+htop
+lazygit
+fastfetch
+fzf
+7zip
+wget
+curl
+speedtest-cli
+neovim
+bat
+vifm
+zsh
+neovim
+git
+docker
+docker-compose
+
+2. install ohmyzsh with theme ZSH_THEME="pygmalion" and plugins plugins=(git sudo common-aliases z ) . set the shell to zsh and set it to zsh on reboots.
+
+3. download my version of nvim . https://github.com/martinshields/nvimbu . and install it . rm -rf ~/.config/nvim ~/.config/nvim.bak && cp -r nvimbu/nvim ~/.config/nvim && nvim . Or wahterver works. 
+
+4. copy alias_pi.zsh file to ~/.oh-my-zsh/custom/ folder and copy the docker-compose.yaml file to whatever folder it needs to be in.  
+
+5. run the script in the script folder pi-foldersetup.sh
+
+6 . i need this in a file named runsetup.sh .
