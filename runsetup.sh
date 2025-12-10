@@ -118,7 +118,7 @@ if [ -f "$HOME/.zshrc" ]; then
     cp "$HOME/.zshrc" "$HOME/.zshrc.backup.$(date +%Y%m%d_%H%M%S)"
 
     # Set theme
-    sed -i 's/^ZSH_THEME=.*/ZSH_THEME="pygmalion"/' "$HOME/.zshrc"
+    sed -i 's/^ZSH_THEME=.*/ZSH_THEME="pmcgee"/' "$HOME/.zshrc"
 
     # Set plugins
     sed -i 's/^plugins=.*/plugins=(git sudo common-aliases z)/' "$HOME/.zshrc"
@@ -168,6 +168,21 @@ if [ -f "$SCRIPT_DIR/configs/alias_pi.zsh" ]; then
 else
     print_error "alias_pi.zsh not found in $SCRIPT_DIR/configs"
     exit 1
+fi
+
+print_step "Configuring vifm to use neovim..."
+mkdir -p ~/.config/vifm
+if ! grep -q "set vicmd=nvim" ~/.config/vifm/vifmrc 2>/dev/null; then
+    cat >> ~/.config/vifm/vifmrc << 'EOF'
+
+" Use neovim as the default editor
+if executable('vim')
+    set vicmd=nvim
+endif
+EOF
+    print_step "vifmrc configured to use neovim"
+else
+    print_warning "vifmrc already contains vicmd=nvim configuration, skipping..."
 fi
 
 print_step "Copying docker-compose.yaml to /opt/media-docker..."
