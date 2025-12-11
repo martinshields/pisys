@@ -63,7 +63,8 @@ sudo apt install -y \
     gettext \
     cmake \
     unzip \
-    build-essential
+    build-essential \
+    kitty-terminfo
 
 print_step "Adding $USER to docker group..."
 sudo usermod -aG docker "$USER"
