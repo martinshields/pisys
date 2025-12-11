@@ -232,7 +232,12 @@ fi
 # Create setup completion documentation
 # =============================================================================
 print_step "Creating setup documentation..."
-cat > "$SCRIPT_DIR/setupcomplete.md" << 'EOF'
+
+# Get local IP address for documentation
+LOCAL_IP=$(hostname -I | awk '{print $1}')
+[ -z "$LOCAL_IP" ] && LOCAL_IP="localhost"
+
+cat > "$SCRIPT_DIR/setupcomplete.md" << EOF
 # Raspberry Pi Media Server Setup Complete
 
 ## Installation Summary
@@ -273,12 +278,12 @@ Once services are running, access them at:
 
 | Service   | URL                              | Purpose                          |
 |-----------|----------------------------------|----------------------------------|
-| Jellyfin  | http://localhost:8096            | Media streaming server           |
-| Sonarr    | http://localhost:8989            | TV show automation               |
-| Radarr    | http://localhost:7878            | Movie automation                 |
-| Portainer | http://localhost:9000            | Docker container management      |
-| Pi-hole   | http://localhost/admin           | DNS ad-blocker                   |
-| Deluge    | http://localhost:8112            | Torrent client (via gluetun VPN) |
+| Jellyfin  | http://$LOCAL_IP:8096            | Media streaming server           |
+| Sonarr    | http://$LOCAL_IP:8989            | TV show automation               |
+| Radarr    | http://$LOCAL_IP:7878            | Movie automation                 |
+| Portainer | http://$LOCAL_IP:9000            | Docker container management      |
+| Pi-hole   | http://$LOCAL_IP/admin           | DNS ad-blocker                   |
+| Deluge    | http://$LOCAL_IP:8112            | Torrent client (via gluetun VPN) |
 
 ## Storage Structure
 
@@ -393,6 +398,11 @@ print_step "Setup documentation created at $SCRIPT_DIR/setupcomplete.md"
 # =============================================================================
 # COMPLETION
 # =============================================================================
+
+# Get local IP address
+LOCAL_IP=$(hostname -I | awk '{print $1}')
+[ -z "$LOCAL_IP" ] && LOCAL_IP="localhost"
+
 echo ""
 echo -e "${GREEN}========================================${NC}"
 echo -e "${GREEN}  Raspberry Pi Setup Complete!${NC}"
@@ -406,12 +416,12 @@ echo "  4. Change Pi-hole password in docker-compose.yaml"
 echo "  5. Start services: cd $COMPOSE_PATH && docker compose up -d"
 echo ""
 echo "Web Interface Access (after starting services):"
-echo "  Jellyfin:  http://localhost:8096"
-echo "  Sonarr:    http://localhost:8989"
-echo "  Radarr:    http://localhost:7878"
-echo "  Portainer: http://localhost:9000"
-echo "  Pi-hole:   http://localhost/admin"
-echo "  Deluge:    http://localhost:8112 (via gluetun)"
+echo "  Jellyfin:  http://$LOCAL_IP:8096"
+echo "  Sonarr:    http://$LOCAL_IP:8989"
+echo "  Radarr:    http://$LOCAL_IP:7878"
+echo "  Portainer: http://$LOCAL_IP:9000"
+echo "  Pi-hole:   http://$LOCAL_IP/admin"
+echo "  Deluge:    http://$LOCAL_IP:8112 (via gluetun)"
 echo ""
 echo "To start using zsh now, run: exec zsh"
 echo ""
