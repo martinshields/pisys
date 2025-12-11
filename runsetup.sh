@@ -71,28 +71,50 @@ sudo usermod -aG docker "$USER"
 # =============================================================================
 # STEP 2: Install neovim from source
 # =============================================================================
-print_step "Installing neovim v0.11.2 or greater..."
-NVIM_VERSION="v0.11.2"
-cd "$HOME"
+print_step "Checking neovim installation..."
+REQUIRED_VERSION="0.11.2"
+SKIP_INSTALL=false
 
-if [ -d "neovim" ]; then
-    print_warning "neovim directory already exists, removing..."
-    rm -rf neovim
+if command -v nvim &> /dev/null; then
+    CURRENT_VERSION=$(nvim --version | head -n1 | grep -oP 'v\K[0-9]+\.[0-9]+\.[0-9]+')
+    print_step "Found neovim v$CURRENT_VERSION"
+
+    # Compare versions (convert to comparable numbers)
+    CURRENT_NUM=$(echo "$CURRENT_VERSION" | awk -F. '{printf "%d%03d%03d", $1, $2, $3}')
+    REQUIRED_NUM=$(echo "$REQUIRED_VERSION" | awk -F. '{printf "%d%03d%03d", $1, $2, $3}')
+
+    if [ "$CURRENT_NUM" -ge "$REQUIRED_NUM" ]; then
+        print_step "Neovim v$CURRENT_VERSION is already installed (>= v$REQUIRED_VERSION), skipping build"
+        SKIP_INSTALL=true
+    else
+        print_warning "Neovim v$CURRENT_VERSION is older than v$REQUIRED_VERSION, will reinstall"
+    fi
+else
+    print_step "Neovim not found, will install v$REQUIRED_VERSION or greater"
 fi
 
-print_step "Cloning neovim repository..."
-git clone https://github.com/neovim/neovim.git --branch stable --depth 1
-cd neovim
+if [ "$SKIP_INSTALL" = false ]; then
+    cd "$HOME"
 
-print_step "Building neovim (this may take several minutes)..."
-make CMAKE_BUILD_TYPE=Release
-sudo make install
+    if [ -d "neovim" ]; then
+        print_warning "neovim directory already exists, removing..."
+        rm -rf neovim
+    fi
 
-cd "$HOME"
-rm -rf neovim
+    print_step "Cloning neovim repository..."
+    git clone https://github.com/neovim/neovim.git --branch stable --depth 1
+    cd neovim
 
-INSTALLED_VERSION=$(nvim --version | head -n1)
-print_step "Neovim installed successfully: $INSTALLED_VERSION"
+    print_step "Building neovim (this may take several minutes)..."
+    make CMAKE_BUILD_TYPE=Release
+    sudo make install
+
+    cd "$HOME"
+    rm -rf neovim
+
+    INSTALLED_VERSION=$(nvim --version | head -n1)
+    print_step "Neovim installed successfully: $INSTALLED_VERSION"
+fi
 
 # =============================================================================
 # STEP 3: Install lazydocker from GitHub
