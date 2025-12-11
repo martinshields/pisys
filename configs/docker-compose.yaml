@@ -62,12 +62,6 @@ services:
       - ./jellyfin-config:/config
       - /mnt/storage/medialibrary:/media
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "sh", "-c", "cat < /dev/tcp/127.0.0.1/8096 >/dev/null 2>&1 || exit 1"]
-      interval: 20s
-      timeout: 5s
-      retries: 6
-      start_period: 15s
 
   sonarr:
     image: linuxserver/sonarr:latest
@@ -83,12 +77,6 @@ services:
       - /mnt/storage/downloads:/downloads
       - /mnt/storage/medialibrary:/media
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "sh", "-c", "cat < /dev/tcp/127.0.0.1/8989 >/dev/null 2>&1 || exit 1"]
-      interval: 20s
-      timeout: 5s
-      retries: 6
-      start_period: 15s
 
   radarr:
     image: linuxserver/radarr:latest
@@ -104,12 +92,6 @@ services:
       - /mnt/storage/downloads:/downloads
       - /mnt/storage/medialibrary:/media
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "sh", "-c", "cat < /dev/tcp/127.0.0.1/7878 >/dev/null 2>&1 || exit 1"]
-      interval: 20s
-      timeout: 5s
-      retries: 6
-      start_period: 15s
 
   portainer:
     image: portainer/portainer-ce:latest
@@ -120,12 +102,6 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./portainer-data:/data
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "sh", "-c", "cat < /dev/tcp/127.0.0.1/9000 >/dev/null 2>&1 || exit 1"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 10s
 
   watchtower:
     image: containrrr/watchtower:latest
@@ -136,12 +112,6 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "sh", "-c", "pgrep watchtower >/dev/null || exit 1"]
-      interval: 60s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
 
   pihole:
     image: pihole/pihole:latest
