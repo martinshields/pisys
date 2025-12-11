@@ -5,6 +5,10 @@ services:
     container_name: gluetun
     cap_add:
       - NET_ADMIN
+    ports:
+      - "8112:8112"  # Deluge Web UI
+      - "6881:6881"  # Deluge torrenting TCP
+      - "6881:6881/udp"  # Deluge torrenting UDP
     environment:
       - TZ=Etc/UTC
       - PUID=1000
@@ -16,7 +20,7 @@ services:
       - ./gluetun:/gluetun
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "bash", "-c", "ip addr show tun0 | grep 'inet ' >/dev/null || exit 1"]
+      test: ["CMD", "sh", "-c", "ip addr show tun0 | grep 'inet ' >/dev/null || exit 1"]
       interval: 15s
       timeout: 5s
       retries: 6
@@ -39,7 +43,7 @@ services:
       - ./deluge-config:/config
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "bash", "-c", "cat < /dev/tcp/127.0.0.1/8112 >/dev/null 2>&1 || exit 1"]
+      test: ["CMD", "sh", "-c", "cat < /dev/tcp/127.0.0.1/8112 >/dev/null 2>&1 || exit 1"]
       interval: 20s
       timeout: 5s
       retries: 6
@@ -59,7 +63,7 @@ services:
       - /mnt/storage/medialibrary:/media
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "bash", "-c", "cat < /dev/tcp/127.0.0.1/8096 >/dev/null 2>&1 || exit 1"]
+      test: ["CMD", "sh", "-c", "cat < /dev/tcp/127.0.0.1/8096 >/dev/null 2>&1 || exit 1"]
       interval: 20s
       timeout: 5s
       retries: 6
@@ -80,7 +84,7 @@ services:
       - /mnt/storage/medialibrary:/media
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "bash", "-c", "cat < /dev/tcp/127.0.0.1/8989 >/dev/null 2>&1 || exit 1"]
+      test: ["CMD", "sh", "-c", "cat < /dev/tcp/127.0.0.1/8989 >/dev/null 2>&1 || exit 1"]
       interval: 20s
       timeout: 5s
       retries: 6
@@ -101,7 +105,7 @@ services:
       - /mnt/storage/medialibrary:/media
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "bash", "-c", "cat < /dev/tcp/127.0.0.1/7878 >/dev/null 2>&1 || exit 1"]
+      test: ["CMD", "sh", "-c", "cat < /dev/tcp/127.0.0.1/7878 >/dev/null 2>&1 || exit 1"]
       interval: 20s
       timeout: 5s
       retries: 6
@@ -117,7 +121,7 @@ services:
       - ./portainer-data:/data
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "bash", "-c", "cat < /dev/tcp/127.0.0.1/9000 >/dev/null 2>&1 || exit 1"]
+      test: ["CMD", "sh", "-c", "cat < /dev/tcp/127.0.0.1/9000 >/dev/null 2>&1 || exit 1"]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -133,7 +137,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "bash", "-c", "pgrep watchtower >/dev/null || exit 1"]
+      test: ["CMD", "sh", "-c", "pgrep watchtower >/dev/null || exit 1"]
       interval: 60s
       timeout: 10s
       retries: 3
