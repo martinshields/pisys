@@ -42,12 +42,6 @@ services:
       - /mnt/storage/medialibrary:/media
       - ./deluge-config:/config
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "sh", "-c", "cat < /dev/tcp/127.0.0.1/8112 >/dev/null 2>&1 || exit 1"]
-      interval: 20s
-      timeout: 5s
-      retries: 6
-      start_period: 10s
 
   jellyfin:
     image: linuxserver/jellyfin:latest
