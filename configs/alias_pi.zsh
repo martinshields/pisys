@@ -10,6 +10,7 @@ alias v='vifm .'
 alias mv="mv-iv"
 alias cp="cp -riv"
 alias mkdir="mkdir -vp"
+alias dc='cd /opt/media-docker/'
 
 # Navigation
 alias ..="cd .."
