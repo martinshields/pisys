@@ -113,7 +113,7 @@ services:
     network_mode: "host"
     environment:
       TZ: "Etc/UTC"
-      WEBPASSWORD: "changeme"
+      WEBPASSWORD: ""
       DNSMASQ_LISTENING: "local"
       REV_SERVER: "true"
       REV_SERVER_DOMAIN: "local"
