@@ -11,6 +11,8 @@ alias mv="mv-iv"
 alias cp="cp -riv"
 alias mkdir="mkdir -vp"
 alias dc='cd /opt/media-docker/'
+alias checkvpn="docker exec gluetun wget -qO- https://ipinfo.io"
+
 
 # Navigation
 alias ..="cd .."

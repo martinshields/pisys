@@ -49,6 +49,7 @@ sudo apt install -y \
     s-tui \
     stress \
     fzf \
+    tree \
     p7zip-full \
     wget \
     curl \

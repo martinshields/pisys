@@ -87,6 +87,19 @@ services:
       - /mnt/storage/medialibrary:/media
     restart: unless-stopped
 
+  prowlarr:
+    image: linuxserver/prowlarr:latest
+    container_name: prowlarr
+    ports:
+      - "9696:9696"
+    environment:
+      - TZ=Etc/UTC
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - ./prowlarr-config:/config
+    restart: unless-stopped
+
   portainer:
     image: portainer/portainer-ce:latest
     container_name: portainer
