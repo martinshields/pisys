@@ -1,6 +1,6 @@
 # Raspberry Pi Media Server Setup
 
-Personal automated setup script for configuring a Raspberry Pi as a media server with Docker-based services.
+Fully automated setup for deploying a complete media server stack on Raspberry Pi with VPN-protected torrenting, automated media management, and network-wide ad blocking.
 
 ## What It Installs
 
@@ -24,30 +24,22 @@ Personal automated setup script for configuring a Raspberry Pi as a media server
 - Automated storage structure setup at `/mnt/storage`
 - User group permissions for media and Docker management
 
-## Installation
+## Quick Start
 
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/martinshields/pisys.git
-   cd pisys
-   ```
+```bash
+git clone https://github.com/martinshields/pisys.git
+cd pisys
+./runsetup.sh
+```
 
-2. Run the setup script:
-   ```bash
-   ./runsetup.sh
-   ```
+**That's it!** The script handles everything. See **[QUICKSTART.md](QUICKSTART.md)** for the complete step-by-step deployment guide.
 
-3. Follow the prompts to:
-   - Select storage drive to mount
-   - Configure folder permissions
-   - Set up automatic mounting (optional)
+## Documentation
 
-4. After completion:
-   - Log out and back in for group changes
-   - Edit `/opt/media-docker/docker-compose.yaml` with VPN credentials
-   - Start services: `cd /opt/media-docker && docker compose up -d`
-
-Full documentation is generated at `setupcomplete.md` after installation.
+- **[QUICKSTART.md](QUICKSTART.md)** - Complete deployment guide from start to finish
+- **[POSTINSTALL.md](POSTINSTALL.md)** - Detailed service configuration (Deluge, Prowlarr, Sonarr, Radarr, Jellyfin)
+- **[CLAUDE.md](CLAUDE.md)** - Architecture overview and technical reference
+- **setupcomplete.md** - Generated after installation with your specific IP addresses
 
 ## Requirements
 
@@ -55,6 +47,42 @@ Full documentation is generated at `setupcomplete.md` after installation.
 - External storage drive
 - Internet connection
 - Debian-based OS (Raspberry Pi OS)
+- VPN account (Private Internet Access recommended)
+
+## Features
+
+✅ **Fully Automated** - Single script deployment with interactive prompts
+✅ **VPN Protected** - All torrent traffic routed through VPN (gluetun + Deluge)
+✅ **Media Automation** - Sonarr/Radarr automatically grab and organize media
+✅ **Unified Indexing** - Prowlarr manages all torrent sites in one place
+✅ **Beautiful UI** - Jellyfin for streaming, Portainer for Docker management
+✅ **Ad Blocking** - Pi-hole for network-wide ad and tracker blocking
+✅ **Auto Updates** - Watchtower keeps containers up to date
+✅ **Persistent Storage** - Systemd service ensures folder structure on boot
+✅ **Developer Friendly** - Custom neovim, zsh, lazygit, lazydocker configs
+
+## Project Structure
+
+```
+pisys/
+├── runsetup.sh              # Main automated setup script
+├── configs/
+│   ├── docker-compose.yaml  # Complete Docker stack definition
+│   ├── pi-foldersetup.sh    # Storage structure setup
+│   └── alias_pi.zsh         # Custom shell aliases
+├── QUICKSTART.md            # Step-by-step deployment guide
+├── POSTINSTALL.md           # Service configuration guide
+├── CLAUDE.md                # Technical reference
+└── README.md                # This file
+```
+
+## What Gets Deployed
+
+**Location:** `/opt/media-docker/`
+
+**Services:** gluetun → deluge → sonarr → radarr → prowlarr → jellyfin → portainer → watchtower → pihole
+
+**Storage:** `/mnt/storage/` with organized downloads/ and medialibrary/ structure
 
 ## Note
 

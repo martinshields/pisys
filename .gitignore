@@ -1,1 +1,20 @@
-CLAUDE.md
+# Generated files
+setupcomplete.md
+
+# Config directories (will be created by Docker)
+deluge-config/
+jellyfin-config/
+sonarr-config/
+radarr-config/
+prowlarr-config/
+portainer-data/
+gluetun/
+pihole/
+
+# Temporary and log files
+*.log
+*.tmp
+
+# System files
+.DS_Store
+*~
