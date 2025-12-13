@@ -279,6 +279,80 @@ Prowlarr manages all indexers (torrent sites) and automatically syncs them to So
 
 ---
 
+## Important: Proper Download Workflow
+
+### ⚠️ Common Mistake: Downloading Directly Through Deluge
+
+**Problem:** If you download content directly through Deluge (without adding it to Radarr/Sonarr first), it will stay in the downloads folder and won't appear in Jellyfin. This is because Radarr/Sonarr don't know they should import it.
+
+**Solution:** Always use Radarr/Sonarr to manage your downloads, not Deluge directly.
+
+### ✅ Correct Workflow for Movies (Radarr)
+
+1. **Open Radarr** (http://YOUR_IP:7878)
+2. Click **Add New** (the + icon)
+3. Search for your movie
+4. Click on the movie from search results
+5. Configure:
+   - **Root Folder**: `/media/movies`
+   - **Quality Profile**: Your preference (e.g., HD-1080p)
+   - **Monitor**: Yes
+6. Click **Add and Search**
+
+**What happens:**
+- Radarr searches all your indexers (via Prowlarr)
+- Sends the best release to Deluge automatically
+- Monitors the download progress
+- **Automatically imports** the file to `/media/movies/Movie Name (Year)/`
+- Jellyfin picks it up automatically
+
+### ✅ Correct Workflow for TV Shows (Sonarr)
+
+1. **Open Sonarr** (http://YOUR_IP:8989)
+2. Click **Add New** (the + icon)
+3. Search for your TV show
+4. Click on the show from search results
+5. Configure:
+   - **Root Folder**: `/media/tv`
+   - **Quality Profile**: Your preference
+   - **Monitor**: Choose what to monitor (All Episodes, Future Episodes, etc.)
+   - **Season Folder**: Yes (recommended)
+6. Click **Add**
+
+**What happens:**
+- Sonarr monitors for new episodes
+- Automatically searches and downloads new episodes as they air
+- **Automatically imports** episodes to `/media/tv/Show Name/Season XX/`
+- Jellyfin picks them up automatically
+
+### 🔧 What To Do If You Already Downloaded Through Deluge
+
+If you've already downloaded something directly through Deluge:
+
+1. **Add the movie/show to Radarr/Sonarr first** (follow steps above)
+2. Go to Radarr/Sonarr → **Wanted** → **Manual Import**
+3. Select `/downloads/torrents/movies` or `/downloads/torrents/tv`
+4. The app will scan and show available files
+5. Click **Import** on the files you want
+6. Wait a few minutes, then refresh Jellyfin
+
+**Or use the web interface:**
+- **Radarr**: Movie page → **Manual Import** → Select the file
+- **Sonarr**: Series page → **Manual Import** → Select episodes
+
+### 📝 Quick Reference
+
+| ❌ Wrong Way | ✅ Right Way |
+|-------------|-------------|
+| Open Deluge → Add torrent directly | Open Radarr/Sonarr → Add content → Let it handle the download |
+| Download completes → File sits in `/downloads/` | Download completes → Automatically imported to `/media/` |
+| Jellyfin never sees it | Jellyfin automatically scans and adds it |
+| Manual work required | Fully automated |
+
+**Remember:** Radarr and Sonarr are your media managers. Deluge is just the download tool they use. Always start with Radarr/Sonarr!
+
+---
+
 ## Troubleshooting
 
 ### Prowlarr indexers not syncing to Sonarr/Radarr
